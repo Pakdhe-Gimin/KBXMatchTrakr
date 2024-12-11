@@ -14,7 +14,7 @@
           "deck": "Terapagos"
         }
       ],
-      "winner": 2
+      "winner": null
     },
     {
       "id": 2,
@@ -28,7 +28,7 @@
           "deck": "Mesprit x Azelf x Uxie"
         }
       ],
-      "winner": 2
+      "winner": null
     },
     {
       "id": 3,
@@ -42,7 +42,7 @@
           "deck": "Pidgeot Control"
         }
       ],
-      "winner": 1
+      "winner": null
     }
   ],
   "leaderboard": [
