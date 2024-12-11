@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Tournament Data</title>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #001f3f;
+      color: #ecf0f1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-size: 36px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    label {
+      font-size: 18px;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    input, select, textarea, button {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: none;
+      margin-bottom: 10px;
+      color: #ecf0f1;
+      background: black;
+    }
+
+    button {
+      background-color: #1abc9c;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #16a085;
+    }
+
+    .add-button {
+      background-color: #2980b9;
+      margin-top: 10px;
+    }
+
+    .add-button:hover {
+      background-color: #3498db;
+    }
+
+    .section {
+      margin-bottom: 40px;
+      width: 100%;
+      max-width: 800px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .row input, .row select {
+      flex: 1;
+    }
+
+    textarea {
+      resize: vertical;
+      height: 150px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Edit Tournament Data</h1>
+
+  <!-- General Info -->
+  <div class="section">
+    <h2>General Information</h2>
+    <div class="form-group">
+      <label for="title">Tournament Title</label>
+      <input type="text" id="title" placeholder="Enter tournament title">
+    </div>
+    <div class="form-group">
+      <label for="round">Round</label>
+      <input type="number" id="round" placeholder="Enter current round" min="1">
+    </div>
+  </div>
+
+  <!-- Tables -->
+  <div class="section">
+    <h2>Tables</h2>
+    <div id="table-list"></div>
+    <button class="add-button" onclick="addTable()">+ Add Table</button>
+  </div>
+
+  <!-- Leaderboard -->
+  <div class="section">
+    <h2>Leaderboard</h2>
+    <div id="leaderboard-list"></div>
+    <button class="add-button" onclick="addLeaderboardEntry()">+ Add Leaderboard Entry</button>
+  </div>
+
+  <!-- Generate/Load JSON -->
+  <div class="section">
+    <div class="row">
+      <button onclick="generateJson()">Generate JSON</button>
+      <button onclick="loadJson()">Load JSON</button>
+    </div>
+  </div>
+
+  <!-- JSON Output -->
+  <div class="section">
+    <h2>JSON Data</h2>
+    <textarea id="json-output"></textarea>
+  </div>
+
+  <script>
+    let data = {
+      title: "",
+      round: 1,
+      tables: [],
+      leaderboard: []
+    };
+
+    // Add a table
+    function addTable(table = { players: [{ name: "", deck: "" }, { name: "", deck: "" }], winner: null }) {
+      const tableList = document.getElementById("table-list");
+      const tableDiv = document.createElement("div");
+      tableDiv.className = "form-group";
+      const tableId = document.getElementById("table-list").children.length + 1; // Auto-generate Table ID
+      tableDiv.innerHTML = `
+        <label>Table ID: ${tableId}</label>
+        <div class="row">
+          <input type="text" value="${table.players[0].name}" placeholder="Player 1 Name">
+          <input type="text" value="${table.players[0].deck}" placeholder="Player 1 Deck">
+        </div>
+        <div class="row">
+          <input type="text" value="${table.players[1].name}" placeholder="Player 2 Name">
+          <input type="text" value="${table.players[1].deck}" placeholder="Player 2 Deck">
+        </div>
+        <label>Winner (1 or 2)</label>
+        <input type="number" value="${table.winner || ""}" placeholder="Winner">
+      `;
+      tableList.appendChild(tableDiv);
+    }
+
+    // Add a leaderboard entry
+    function addLeaderboardEntry(entry = { name: "", points: 0 }) {
+      const leaderboardList = document.getElementById("leaderboard-list");
+      const entryDiv = document.createElement("div");
+      entryDiv.className = "row";
+      entryDiv.innerHTML = `
+        <input type="text" value="${entry.name}" placeholder="Player Name">
+        <input type="number" value="${entry.points}" placeholder="Points">
+      `;
+      leaderboardList.appendChild(entryDiv);
+    }
+
+    // Generate JSON and display in the textarea
+    function generateJson() {
+      // Update general info
+      data.title = document.getElementById("title").value;
+      data.round = parseInt(document.getElementById("round").value);
+
+      // Update tables
+      const tableDivs = document.getElementById("table-list").children;
+      data.tables = Array.from(tableDivs).map((div, index) => {
+        const inputs = div.querySelectorAll("input");
+        return {
+          id: index + 1,
+          players: [
+            { name: inputs[0].value, deck: inputs[1].value },
+            { name: inputs[2].value, deck: inputs[3].value }
+          ],
+          winner: parseInt(inputs[4].value) || null
+        };
+      });
+
+      // Update leaderboard
+      const leaderboardRows = document.getElementById("leaderboard-list").children;
+      data.leaderboard = Array.from(leaderboardRows).map(row => {
+        const inputs = row.querySelectorAll("input");
+        return {
+          name: inputs[0].value,
+          points: parseInt(inputs[1].value)
+        };
+      });
+
+      // Display readable but compact JSON in textarea
+      document.getElementById("json-output").value = JSON.stringify(data, null, 2);
+    }
+
+    // Load JSON from textarea
+    function loadJson() {
+      const jsonText = document.getElementById("json-output").value;
+
+      try {
+        const loadedData = JSON.parse(jsonText);
+
+        // Validate and update data
+        data = loadedData || { title: "", round: 1, tables: [], leaderboard: [] };
+
+        // Populate general info
+        document.getElementById("title").value = data.title || "";
+        document.getElementById("round").value = data.round || 1;
+
+        // Populate tables
+        document.getElementById("table-list").innerHTML = "";
+        (data.tables || []).forEach(table => addTable(table));
+
+        // Populate leaderboard
+        document.getElementById("leaderboard-list").innerHTML = "";
+        (data.leaderboard || []).forEach(entry => addLeaderboardEntry(entry));
+      } catch (error) {
+        alert("Invalid JSON format!");
+      }
+    }
+  </script>
+</body>
+</html>

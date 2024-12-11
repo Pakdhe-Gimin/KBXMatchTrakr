@@ -1,0 +1,74 @@
+{
+  "title": "Kolektibles GYM",
+  "round": 1,
+  "tables": [
+    {
+      "id": 1,
+      "players": [
+        {
+          "name": "Daryl",
+          "deck": "Lugia"
+        },
+        {
+          "name": "Owen",
+          "deck": "Terapagos"
+        }
+      ],
+      "winner": 2
+    },
+    {
+      "id": 2,
+      "players": [
+        {
+          "name": "Andrew",
+          "deck": "Lost Box"
+        },
+        {
+          "name": "Gimin",
+          "deck": "Mesprit x Azelf x Uxie"
+        }
+      ],
+      "winner": 2
+    },
+    {
+      "id": 3,
+      "players": [
+        {
+          "name": "Esther",
+          "deck": "Charizard"
+        },
+        {
+          "name": "Jensen",
+          "deck": "Pidgeot Control"
+        }
+      ],
+      "winner": 1
+    }
+  ],
+  "leaderboard": [
+    {
+      "name": "Andrew",
+      "points": 12
+    },
+    {
+      "name": "Gimin",
+      "points": 12
+    },
+    {
+      "name": "Daryl",
+      "points": 9
+    },
+    {
+      "name": "Esther",
+      "points": 9
+    },
+    {
+      "name": "Jensen",
+      "points": 6
+    },
+    {
+      "name": "Owen",
+      "points": 6
+    }
+  ]
+}
